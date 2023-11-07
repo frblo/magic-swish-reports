@@ -22,3 +22,10 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 .vscode/
+swish_ocr/swish1.jpg.txt
+swish_ocr/swish2.jpg.txt
+swish_ocr/swish3.jpg.txt
+swish_raw/swish1.jpg
+swish_raw/swish2.jpg
+swish_raw/swish3.jpg
+rawdata.txt
