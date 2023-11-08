@@ -1,25 +1,30 @@
 use std::fs::File;
 use std::io::{BufReader, Read, BufRead, BufWriter, Write};
 
+struct Swish {
+    name: String,
+    amount: String,
+}
 
 pub fn convert(filename: String) {
     let mut readfile = BufReader::new(File::open(filename).unwrap());
     let mut writefile = BufWriter::new(File::create("swish.csv")
         .expect("Failed to create swish.csv"));
 
+
     // write_to_csv(&mut writefile, "Name".to_string(), "Amount".to_string());
 
-    while let Ok(line) = readfile.fill_buf() {
-        if line.len() == 0 {
+    let mut buf = String::new();
+
+    while let Ok(line) = readfile.read_line(&mut buf) {
+        if line == 0 {
             break;
         }
-        let line = String::from_utf8(line.to_vec()).unwrap();
-        let mut split = line.split_whitespace();
-        let name = split.next().unwrap().to_string();
-        let amount = split.next().unwrap().to_string();
-        write_to_csv(&mut writefile, name, amount);
-        readfile.consume(line.len());
+        let swish = get_data(buf.clone());
+        write_to_csv(&mut writefile, swish);
+        buf.clear();
     }
+
 
     writefile.flush().unwrap();
 }
@@ -30,8 +35,8 @@ pub fn convert(filename: String) {
  * to
  *  Firstname Lastname 12
  */
-fn get_data(raw_data: String) -> Vec<String> {
-    let rd = raw_data.split(",");
+fn get_data(raw_data: String) -> Swish {
+    let rd = raw_data.split(":");
     let mut data = Vec::new();
     for s in rd {
         data.push(s.to_string());
@@ -44,16 +49,32 @@ fn get_data(raw_data: String) -> Vec<String> {
         .collect::<Vec<String>>();
 
     data.pop();
-    return data;
+    if !validate_data(data.clone()) {
+        panic!("Invalid data: {:?}", data);
+    }
+
+    let amount = data.pop().unwrap();
+    let name = data.join(" ");
+
+    return Swish {
+        name,
+        amount,
+    };
 }
 
-// fn get_line(r: &mut BufReader<File>) -> String {
-//     let mut line = String::new();
-//     r.read_line(&mut line).unwrap();
-//     return line;
-// }
+fn validate_data(data: Vec<String>) -> bool {
+    if data.len() < 2 {
+        return false;
+    }
+    let last = data.last().unwrap();
+    
+    if last.parse::<i32>().is_err() { // check if the last element of data is a number
+        return false;
+    }
+    return true;
+}
 
-fn write_to_csv(w: &mut BufWriter<File>, name: String, amount: String) {
-    let line = format!("{},{}\n", name, amount);
+fn write_to_csv(w: &mut BufWriter<File>, swish: Swish) {
+    let line = format!("{},{}\n", swish.name, swish.amount);
     w.write(line.as_bytes()).unwrap();
 }

@@ -5,6 +5,6 @@ mod converter;
 
 fn main() {
     // setup();
-    converter::convert("test.txt".to_string());
+    converter::convert("rawdata.txt".to_string());
     println!("Setup complete")
 }
