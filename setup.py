@@ -1,3 +1,4 @@
 import subprocess
 
-print(subprocess.run(["./setup.sh"]))
+def setup():
+    print(subprocess.run(["./setup.sh"]))
