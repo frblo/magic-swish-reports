@@ -13,4 +13,4 @@ do
 done
 
 # grep -E "[0-9]+ kr$" swish_ocr/*.txt > rawdata.txt
-grep -E "[^:-] [0-9]+.kr$" swish_ocr/*.txt > rawdata.txt
+grep -E "[^:-] [0-9]+ kr$" swish_ocr/*.txt > rawdata.txt

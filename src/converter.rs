@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{BufReader, Read, BufRead, BufWriter, Write};
+use std::io::{BufReader, BufRead, BufWriter, Write};
 
 struct Swish {
     name: String,
@@ -21,7 +21,11 @@ pub fn convert(filename: String) {
             break;
         }
         let swish = get_data(buf.clone());
-        write_to_csv(&mut writefile, swish);
+        if swish.is_none() {
+            buf.clear();
+            continue;
+        }
+        write_to_csv(&mut writefile, swish.unwrap());
         buf.clear();
     }
 
@@ -35,7 +39,7 @@ pub fn convert(filename: String) {
  * to
  *  Firstname Lastname 12
  */
-fn get_data(raw_data: String) -> Swish {
+fn get_data(raw_data: String) -> Option<Swish> {
     let rd = raw_data.split(":");
     let mut data = Vec::new();
     for s in rd {
@@ -50,16 +54,17 @@ fn get_data(raw_data: String) -> Swish {
 
     data.pop();
     if !validate_data(data.clone()) {
-        panic!("Invalid data: {:?}", data);
+        // panic!("Invalid data: {:?}", data);
+        return None;
     }
 
     let amount = data.pop().unwrap();
     let name = data.join(" ");
 
-    return Swish {
+    return Some(Swish {
         name,
         amount,
-    };
+    });
 }
 
 fn validate_data(data: Vec<String>) -> bool {
