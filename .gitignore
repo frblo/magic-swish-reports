@@ -29,3 +29,9 @@ swish_raw/swish1.jpg
 swish_raw/swish2.jpg
 swish_raw/swish3.jpg
 rawdata.txt
+
+
+# Added by cargo
+
+/target
+swish.csv
