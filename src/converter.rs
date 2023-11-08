@@ -11,9 +11,6 @@ pub fn convert(filename: String) {
     let mut writefile = BufWriter::new(File::create("swish.csv")
         .expect("Failed to create swish.csv"));
 
-
-    // write_to_csv(&mut writefile, "Name".to_string(), "Amount".to_string());
-
     let mut buf = String::new();
 
     while let Ok(line) = readfile.read_line(&mut buf) {
@@ -54,7 +51,6 @@ fn get_data(raw_data: String) -> Option<Swish> {
 
     data.pop();
     if !validate_data(data.clone()) {
-        // panic!("Invalid data: {:?}", data);
         return None;
     }
 
