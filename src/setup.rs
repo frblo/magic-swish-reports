@@ -1,8 +1,12 @@
-use std::process::Command;
+use run_script::ScriptOptions;
 
 pub fn setup() {
-    let _ = Command::new("sh")
-        .arg("./setup.sh")
-        .spawn()
-        .expect("failed to execute process");
+    let options = ScriptOptions::new();
+
+    let _ = run_script::run_script!(
+        r#"
+        sh ./setup.sh
+        "#,
+        &options
+    );
 }
